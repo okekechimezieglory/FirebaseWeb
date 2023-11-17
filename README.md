@@ -38,17 +38,17 @@ $ cd firebaseWeb
 ##Add firebase project
 
 Goto to console.firebase.google.com, ensure that you are logged into your google mail account
-<br/>
+<br />
 create a new project and give it a name
-<br/>
+<br />
 hit on add firebase to your web app, a window pops up with some scripts containing your apiKey, etc, copy them
 
-<br/>
+<br />
 move over to your html file and paste it inside the head section
-<br/>
+<br />
 from the rules tab gotten from the database section on the sidebar for your firebase, change the read and write rules to "True"
 
-<br/>
+<br />
 
 Remember to make changes or copy and attach the database url, project name and whatever required data as spelt in the html file.
 ```
