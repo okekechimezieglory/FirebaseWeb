@@ -1,0 +1,148 @@
+<html>
+
+<head>
+    <title>Firebase Realtime Web CRUD</title>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+         
+		<script src="https://www.gstatic.com/firebasejs/5.0.3/firebase.js"></script>
+			<script>
+			  // Initialize Firebase
+			  var config = {
+				apiKey: "AIzaSyBPomv5kX_hX4TmamlETLKuH6CFCE7xCt8",
+				authDomain: "fire-web-3d9df.firebaseapp.com",
+				databaseURL: "https://fire-web-3d9df.firebaseio.com",
+				projectId: "fire-web-3d9df",
+				storageBucket: "fire-web-3d9df.appspot.com",
+				messagingSenderId: "338231752620"
+			  };
+			  firebase.initializeApp(config);
+			</script>
+</head>
+
+<body>
+<div class="container">
+	<div class="row">
+		<div class="col-lg-12">
+		
+		 <div class="text-center"><h2 style="padding:15px;">I/O Extended 2018 Oko Firebase Codelab</h2></div>
+	
+	
+	<div class="panel panel-default">
+		<div class="class panel-heading">
+			<h3>Create a new Track Session</h3>
+		</div>
+
+    <div class="class panel-body">
+        <form action="">
+
+           
+            <div class="form-group">
+                <label for="id">ID</label>
+                <input type="text" class="form-control" name="id" id="track_id"/>
+            </div>
+			
+			 <div class="form-group">
+                <label for="trackname">Track Name:</label>
+               <input type="text" class="form-control" name="track_name" id="track_name"/>
+            </div>
+
+                    <div class="form-group">
+                        <div class="text-center">
+                           <input type="button" class="btn btn-success" value="Save" onclick="save_track();"/>
+						   <input type="button" class="btn btn-info" value="Update" onclick="update_track();"/>
+							<input type="button" class="btn btn-danger" value="Delete" onclick="delete_track();"/>
+                        </div>
+                    </div>
+					<br>
+					 <h3>I/O Extended 2018 oko Tracks list</h3>
+					<div class="form-group">
+						<table id="tbl_tacks_list" border="1" class="table table-hover">
+							<tr>
+            <td>ID</td>
+            <td>TRACK SESSION NAME</td>
+        </tr>
+						</table>
+					</div>
+        </form>
+    </div>
+</div>
+
+</div>
+	</div>
+</div>
+
+
+
+    <script>
+
+        var tblTracks = document.getElementById('tbl_tacks_list');
+        var databaseRef = firebase.database().ref('tracks/');
+        var rowIndex =1;
+
+        databaseRef.once('value', function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                var childkey = childSnapshot.key;
+                var childData = childSnapshot.val();
+
+                var row = tblTracks.insertRow(rowIndex);
+                var cellId = row.insertCell(0);
+                var cellName = row.insertCell(1);
+                cellId.appendChild(document.createTextNode(childkey));
+                cellName.appendChild(document.createTextNode(childData.track_name));
+
+                rowIndex = rowIndex + 1;
+            });
+        });
+        
+
+
+        function save_track(){
+		    var track_name = document.getElementById('track_name').value;
+			var tid = firebase.database().ref().child('tracks').push().key;
+            
+            
+
+            var data = {
+                track_id: tid,
+                track_name: track_name
+            }
+
+            var updates = {};
+            updates['/tracks/' + tid] = data;
+            firebase.database().ref().update(updates);
+
+            alert('Track created successfully!');
+            reload_page();
+
+        }
+
+        function update_track(){
+            var track_name = document.getElementById('track_name').value;
+            var track_id = document.getElementById('track_id').value;        
+
+            var data = {
+                track_id: track_id,
+                track_name: track_name
+            }
+
+            var updates = {};
+            updates['/tracks/' + track_id] = data;
+            firebase.database().ref().update(updates);
+
+            alert('Track updated successfully!');
+            reload_page();
+        }
+
+        function delete_track(){
+            var track_id = document.getElementById('track_id').value;        
+            firebase.database().ref().child('/tracks/' + track_id).remove();
+            alert('Track deleted successfully!');
+            reload_page();
+        }
+
+        function reload_page(){
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>
